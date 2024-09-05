@@ -1,0 +1,184 @@
+<html xmlns:th="https://www.thymeleaf.org">
+   <head>
+      <meta charset="utf-8">
+      <title>Menu</title>
+ 
+ <!-- Include CSS File -->
+ 
+      <link th:href="@{/css/menu_style.css}" rel="stylesheet">
+      
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+ 
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>  
+  
+<style>
+.form-control{
+width: 200px;
+  padding: 10px;
+  border: 1px solid black;
+  
+}
+button {
+  background-color: green;
+  color: white;
+  font-size: 16px;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+h2, h1 {
+    background-color: white;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+form {
+    margin-top: 20px;
+}
+
+select, input[type="text"], button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+select:focus, input[type="text"]:focus, button:focus {
+    outline: none;
+    border-color: #666;
+}
+
+button {
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #444;
+}
+
+.search-section, .display-section, .rate-section {
+    margin-top: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+</style>  
+  
+   <body>   
+      <nav>
+         <div class="logo">
+            Smart Book Store
+         </div>
+         <label for="click" class="menu-btn">
+         <i class="fas fa-bars"></i>
+         </label>
+         <ul>
+            <li><a href="/User_Home">Home</a></li>
+            <li><a href="/User_Books">Search Book</a></li>
+            <li><a class="active" href="/User_Buy_Book">Buy Book</a></li>
+            <li><a href="/Order_Details">Order Details</a></li>
+            <li><a href="#"><span th:text="${User}"></span></a></li>
+            <li><a href="/">Logout</a></li>
+         </ul>
+      </nav>
+
+      
+      
+      
+	  <!-- Buy Book -->      
+	  <div class="container">
+	      <h1 class="heading">Search Book</h1>
+	      <form class="form" action="/user_Search_Buy_Book" method="post" id="Form_Search">
+	          <input type="text" class="form-control" name="Book_title" placeholder="Book title">
+	          <button type="submit">Search</button>
+	      </form>
+	  </div>
+	  
+	  <!-- Buy Book Server -->
+	  <div class="container" th:if="${PrintSwal == 'Book_Found'}">
+	      <h1 class="heading">Confirm Book Order</h1>
+	      <form class="form" action="/user_Save_Buy_Book" method="post" id="Form_Search">
+	          <input type="text" class="form-control" name="Book_name" placeholder="Book title" th:value="${Bname}">
+	          <input type="text" class="form-control" name="Price" placeholder="Book Price" th:value="${Bprice}">
+	          <button type="submit">Buy</button>
+	      </form>
+	  </div>
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+<div th:if="${PrintSwal == 'Book_Not_Found'}">    
+<script>swal("Sorry Book Not Available");</script>
+</div>    
+
+<div th:if="${PrintSwal == 'Buy_Sucess'}">    
+<script>swal("Book Buy Sucessfully");</script>
+</div>   
+
+
+
+<!-- Footer -->
+<div class="footer">
+        &copy; 2024 Smart Book Store. All rights reserved.
+    </div>
+
+</body>
+
+
+
+
+</html>

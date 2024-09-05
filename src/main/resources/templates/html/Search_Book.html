@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Menu</title>
+
+    <!-- Include CSS File -->
+    <link th:href="@{/css/menu_style.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Include SweetAlert2 Library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        h2, h1 {
+            background-color: white;
+            color: black;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        select, input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        select:focus, input[type="text"]:focus, button:focus {
+            outline: none;
+            border-color: #666;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+        .search-section, .display-section, .rate-section {
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .heading {
+            display: block;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: center;
+            border-radius: 5px;
+            background-color: blue;
+            color: white;
+        }
+
+      
+
+               .menu-btn {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                float: none;
+                text-align: center;
+                display: none;
+                width: 100%;
+            }
+
+            nav ul li {
+                display: block;
+                margin: 0;
+            }
+
+            nav ul li a {
+                padding: 10px;
+            }
+
+            nav ul li a:hover,
+            nav ul li a.active {
+                background-color: #555;
+            }
+
+            .menu-btn {
+                display: block;
+                cursor: pointer;
+                color: white;
+                font-size: 26px;
+                padding: 15px;
+                float: right;
+            }
+
+            .menu-btn.active + ul {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">
+        Smart Book Store
+    </div>
+    <label for="click" class="menu-btn">
+        <i class="fas fa-bars"></i>
+    </label>
+    <ul>
+        <li><a href="/User_Home">Home</a></li>
+        <li><a class="active" href="/User_Books">Search Book</a></li>
+        <li><a href="/User_Buy_Book">Buy Book</a></li>
+        <li><a href="/Order_Details">Order Details</a></li>
+        <li><a href="#"><span th:text="${User}"></span></a></li>
+        <li><a href="/">Logout</a></li>
+    </ul>
+</nav>
+
+<br><br><br>
+
+<div class="container">
+    <h2>Select Options</h2>
+    <form action="/user_select_operation" method="post" id="form1">
+        <select id="book_operation" name="book_operation">
+            <option value="None">None</option>
+            <option value="Search">Search Book</option>
+            <option value="Display">Display Book</option>
+            <option value="R&R">Rate and Reviews Book</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Search Book -->
+    <div class="search-section" th:if="${selectSearch == 'Search'}">
+        <h1>Search Book By Title</h1>
+        <form class="form" action="/user_search_Book" method="post" onsubmit="return validateForm2()" id="Form_Search">
+            <input type="text" class="form-control" name="Book_title" placeholder="Book title" value="Mahabharat">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <!-- Display Book -->
+    <div class="display-section" th:if="${selectDisplay == 'Display'}">
+        <table>
+            <tr>
+                <th>Book Title</th>
+                <th>Author</th>
+                <th>Reviews</th>
+                <th>Rating</th>
+                <th>Price</th>
+            </tr>
+            <tr th:each="BookArray : ${BookObject}">
+                <td th:text="${BookArray.getBook_title()}"></td>
+                <td th:text="${BookArray.getAuthor()}"></td>
+                <td th:text="${BookArray.getReviews()}"></td>
+                <td th:text="${BookArray.getRate()}"></td>
+                <td th:text="${BookArray.getPrice()}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Rate & Reviews Book -->
+    <div class="rate-section" th:if="${selectRR == 'RR'}">
+        <h1><span style="background-color: yellow; color: black;">Rate & Review By User</span></h1>
+        <form class="form" action="/user_Rate_Book" method="post" onsubmit="return validateForm3()" id="Form_Rate">
+            <input type="text" class="form-control" name="Book_title" placeholder="Book title" value="Book Title">
+            <span class="heading">User Reviews</span>
+            <input type="text" class="form-control" name="Reviews" placeholder="Reviews" value="Reviews">
+            <span class="heading">User Rating</span>
+            <select name="rate">
+                <option value="1">1 Star</option>
+                <option value="2">2 Star</option>
+                <option value="3">3 Star</option>
+                <option value="4">4 Star</option>
+                <option value="5" selected>5 Star</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function validateForm2() {
+        let b1 = document.forms["Form_Search"]["Book_title"].value;
+        if (b1 == "") {
+            swal("Book Title Must be filled out");
+            return false;
+        }
+    }
+
+    function validateForm3() {
+        let b1 = document.forms["Form_Rate"]["Book_title"].value;
+        if (b1 == "") {
+            swal("Book Title Must be filled out");
+            return false;
+        }
+    }
+</script>
+
+<div th:if="${PrintSwal == 'Book_Found'}">
+    <script>swal("Book Found Successfully");</script>
+</div>
+
+<div th:if="${PrintSwal == 'Book_Not_Found'}">
+    <script>swal("Sorry, Book Not Available");</script>
+</div>
+
+<div th:if="${PrintSwal == 'Book_Details_Empty'}">
+    <script>swal("Sorry, Books Not Available");</script>
+</div>
+
+<div th:if="${PrintSwal == 'RBook_Found'}">
+    <script>swal("Book Rate & Reviews Updated Successfully");</script>
+</div>
+
+<div th:if="${PrintSwal == 'RBook_Not_Found'}">
+    <script>swal("Sorry, Book Not Available");</script>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    &copy; 2024 Smart Book Store. All rights reserved.
+</div>
+
+</body>
+</html>
